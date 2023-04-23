@@ -24,6 +24,8 @@ class WidgetMixin(object):
         Absolute URL to the autocomplete view for the widget. It can be set to
         a URL name, in which case it will be reversed when the attribute is
         accessed.
+        If you want to pass kwargs to reverse, pass a tuple like this:
+        (url_name, kwargs)  eg: ('people', {'country': 'US'})
 
     .. py:attribute:: forward
 
@@ -159,6 +161,10 @@ class WidgetMixin(object):
     def _get_url(self):
         if self._url is None:
             return None
+
+        if isinstance(self._url, tuple):
+            (url_name, kwargs) = self._url
+            return reverse(url_name, kwargs=kwargs)
 
         if '/' in self._url:
             return self._url
